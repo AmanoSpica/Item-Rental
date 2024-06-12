@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>新規貸出</title>
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-  <body>
-    <%- include('header') %>
+
+<head>
+  <meta charset="utf-8">
+  <title>新規貸出</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <%- include('header') %>
     <main>
       <div class="container">
         <div class="container-header">
@@ -17,24 +19,23 @@
             <div class="form-group">
               <label for="class">クラス</label>
               <select name="class">
-                <% const classList = [
-                  {name: "1組", num: 1},
-                  {name: "2組", num: 2},
-                  {name: "3組", num: 3},
-                  {name: "4組", num: 4},
-                  {name: "5組", num: 5},
-                  {name: "6組", num: 6}]; %>
-                <% classList.forEach(function(classNum) { %>
-                <option value="<%= classNum.num %>"><%= classNum.name %></option>
-                <% }); %>
+                <% const classList=[ {name: "1組" , num: 1}, {name: "2組" , num: 2}, {name: "3組" , num: 3}, {name: "4組" ,
+                  num: 4}, {name: "5組" , num: 5}, {name: "6組" , num: 6}]; %>
+                  <% classList.forEach(function(classNum) { %>
+                    <option value="<%= classNum.num %>">
+                      <%= classNum.name %>
+                    </option>
+                    <% }); %>
               </select>
             </div>
             <div class="form-group">
               <label for="itemNum">貸出物品</label>
               <select name="item">
                 <% items.forEach(function(item) { %>
-                  <option value="<%= item.itemNum %>"><%= item.itemName %></option>
-                <% }); %>
+                  <option value="<%= item.itemNum %>">
+                    <%= item.itemName %>
+                  </option>
+                  <% }); %>
               </select>
             </div>
             <div class="form-group">
@@ -48,5 +49,6 @@
         </div>
       </div>
     </main>
-  </body>
+</body>
+
 </html>

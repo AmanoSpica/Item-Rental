@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>返却</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <%- include('header') %>
+    <main>
+      <h2>返却確認</h2>
+      <h3>以下の物品を返却処理します。よろしいですか？</h3>
+      <div class="return-item">
+        <div class="list-item-id">ID: <%= data.dataNum %>
+        </div>
+        <div class="list-item-name">物品名: <%= data.itemName %>
+        </div>
+        <div class="list-item-piece">個数: <%= data.itemPiece %>個</div>
+        <div class="list-item-class">クラス: <%= data.className %>組</div>
+        <div class="list-item-date">貸出日時: <%= data.lentTime %>
+        </div>
+        <div class="list-item-button">
+          <form action="/return/<%= data.dataNum %>" method="post">
+            <input type="submit" value="返却">
+          </form>
+          <form action="/list" method="get">
+            <input type="submit" value="キャンセル">
+          </form>
+        </div>
+      </div>
+    </main>
+</body>
+
+</html>
