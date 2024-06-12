@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>返却</title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <%- include('header') %>
+    <main>
+      <h2>貸出物品一覧 (現在貸し出し中)</h2>
+      <div class="botton-container">
+        <a href="/lent">新規貸出</a>
+      </div>
+      <div class="list-container">
+        <% data.forEach((lent) => { %>
+          <div class="list-item">
+            <!-- items配列からlent.itemNumを検索 -->
+            <div class="list-item-id">ID: <%= lent.dataNum %></div>
+            <div class="list-item-name">物品名: <%= lent.itemName %></div>
+            <div class="list-item-piece">個数: <%= lent.itemPiece %>個</div>
+            <div class="list-item-class">クラス: <%= lent.className %>組</div>
+            <div class="list-item-date">貸出日時: <%= lent.lentTime %></div>
+            <div class="list-item-button">
+              <form action="/return" method="post">
+                <input type="hidden" name="id" value="<%= lent.id %>">
+                <input type="submit" value="返却">
+              </form>
+            </div>
+          </div> <% }) %>
+      </div>
+    </main>
+  </body>
+</html>
