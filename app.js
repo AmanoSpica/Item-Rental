@@ -15,12 +15,12 @@ const items = [
 ];
 
 const classList = [
-	{ name: "1組", num: 1 },
-	{ name: "2組", num: 2 },
-	{ name: "3組", num: 3 },
-	{ name: "4組", num: 4 },
-	{ name: "5組", num: 5 },
-	{ name: "6組", num: 6 }
+	{ name: '1組', num: 1 },
+	{ name: '2組', num: 2 },
+	{ name: '3組', num: 3 },
+	{ name: '4組', num: 4 },
+	{ name: '5組', num: 5 },
+	{ name: '6組', num: 6 }
 ];
 
 
@@ -66,16 +66,18 @@ app.get('/list', (req, res) => {
 	console.log(filter);
 
 	// SQL SELECT処理
-	if (filter && (filter.class != "0" | filter.item != "0")) {
-		if (filter.class != "0" && filter.item != "0") {
-			console.log("両方選択");
-		} else if (filter.class != "0") {
-			console.log("クラスだけ選択");
+	if (filter != null) {
+		if (filter.class == '0' && filter.item == '0') {
+			console.log('全選択');
+		} else if (filter.class != '0' && filter.item == '0') {
+			console.log('クラスのみ選択');
+		} else if (filter.class == '0' && filter.item != '0') {
+			console.log('アイテムのみ選択');
 		} else {
-			console.log("アイテムだけ選択");
+			console.log('両方選択');
 		}
 	} else {
-		console.log("選択なし");
+		console.log('選択なし');
 	}
 
 	let data = [

@@ -21,8 +21,9 @@
         <a href="/lent">新規貸出</a>
       </div>
       <div class="filter-container">
+        <p>絞り込み</p>
         <form action="/list" method="get">
-          <select name="class">
+          <select name="item">
             <option value="0"></option>
             <% items.forEach((item)=> { %>
               <option value="<%= item.itemNum %>">
@@ -30,7 +31,7 @@
               </option>
               <% }); %>
           </select>
-          <select name="items">
+          <select name="class">
             <option value="0"></option>
             <% classList.forEach((classNum)=> { %>
               <option value="<%= classNum.num %>">
