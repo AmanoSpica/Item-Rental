@@ -10,7 +10,7 @@
       alert("<%= message %>");
       location.href = '/list';
     </script>
-    <% } %>
+  <% } %>
 </head>
 
 <body>
@@ -21,23 +21,23 @@
         <a href="/lent">新規貸出</a>
       </div>
       <div class="filter-container">
-        <p>絞り込み</p>
+        <h3>絞り込み</h3>
         <form action="/list" method="get">
           <select name="item">
             <option value="0"></option>
             <% items.forEach((item)=> { %>
-              <option value="<%= item.itemNum %>">
-                <%= item.itemName %>
+              <option value="<%= item.id %>">
+                <%= item.item_name %>
               </option>
-              <% }); %>
+            <% }); %>
           </select>
           <select name="class">
             <option value="0"></option>
             <% classList.forEach((classNum)=> { %>
-              <option value="<%= classNum.num %>">
+              <option value="<%= classNum.id %>">
                 <%= classNum.name %>
               </option>
-              <% }); %>
+            <% }); %>
           </select>
           <input type="submit" value="絞り込み">
         </form>
@@ -46,21 +46,21 @@
         <% data.forEach((lent)=> { %>
           <div class="list-item">
             <!-- items配列からlent.itemNumを検索 -->
-            <div class="list-item-id">貸出番号: <%= lent.dataNum %>
+            <div class="list-item-id">貸出番号: <%= lent.id %>
             </div>
-            <div class="list-item-name">物品名: <%= lent.itemName %>
+            <div class="list-item-name">物品名: <%= lent.item_name %>
             </div>
-            <div class="list-item-piece">個数: <%= lent.itemPiece %>個</div>
-            <div class="list-item-class">クラス: <%= lent.className %>組</div>
-            <div class="list-item-date">貸出日時: <%= lent.lentTime %>
+            <div class="list-item-piece">個数: <%= lent.item_piece %>個</div>
+            <div class="list-item-class">クラス: <%= lent.class_name %></div>
+            <div class="list-item-date">貸出日時: <%= lent.lent_time %>
             </div>
             <div class="list-item-button">
-              <form action="/return-confirm/<%= lent.dataNum %>" method="get">
+              <form action="/return-confirm/<%= lent.id %>" method="get">
                 <input type="submit" value="返却">
               </form>
             </div>
           </div>
-          <% }) %>
+        <% }) %>
       </div>
     </main>
 </body>

@@ -1,7 +1,9 @@
+import { connect } from '@tidbcloud/serverless';
+import dotenv from 'dotenv';
 import express from 'express';
 
-const express = require('express');
 const app = express();
+dotenv.config();
 
 app.set('view engine', 'ejs');
 app.use(express.json());
@@ -10,30 +12,30 @@ app.use(express.urlencoded({
 }));
 app.use(express.static('public'));
 
+const conn = connect({url: process.env.SQL_URL});
 
-const items = [
-	{ itemNum: 1, itemName: 'スパナ' },
-	{ itemNum: 2, itemName: 'ハンマー' },
-];
-
-const classList = [
-	{ name: '1組', num: 1 },
-	{ name: '2組', num: 2 },
-	{ name: '3組', num: 3 },
-	{ name: '4組', num: 4 },
-	{ name: '5組', num: 5 },
-	{ name: '6組', num: 6 }
-];
-
-
+const items = await conn.execute('SELECT * FROM Items;')
+const classList = await conn.execute('SELECT * FROM Classes;')
 
 
 const itemNumToName = (data) => {
 	// dataのitemNumを元にitemNameをオブジェクトに追加
 	for (let i = 0; i < data.length; i++) {
 		for (let j = 0; j < items.length; j++) {
-			if (data[i].itemNum === items[j].itemNum) {
-				data[i].itemName = items[j].itemName;
+			if (data[i].item_id === items[j].id) {
+				data[i].item_name = items[j].item_name;
+			}
+		}
+	}
+	return data;
+};
+
+const classNumToName = (data) => {
+	// dataのclassNameを元にclassNameをオブジェクトに追加
+	for (let i = 0; i < data.length; i++) {
+		for (let j = 0; j < classList.length; j++) {
+			if (data[i].class_num === classList[j].id) {
+				data[i].class_name = classList[j].name;
 			}
 		}
 	}
@@ -47,6 +49,7 @@ app.get('/', (req, res) => {
 	res.render('index.ejs');
 });
 
+
 app.get('/lent', (req, res) => {
 	const message = req.query.message ? req.query.message : null;
 
@@ -55,50 +58,40 @@ app.get('/lent', (req, res) => {
 	);
 });
 
+
 app.post('/lent', (req, res) => {
-	// SQL INSERT処理
+	// TODO SQL INSERT処理
 	console.log(req.body);
 	const id = 4;
 	res.redirect(`/list?message=貸出処理が完了しました！貸出番号は ${id} です。`);
 });
 
 
-app.get('/list', (req, res) => {
+app.get('/list', async (req, res) => {
 	const filter = req.query ? req.query : null;
 	console.log(filter);
+	let data = null;
 
-	// SQL SELECT処理
 	if (filter != null) {
 		if (filter.class == '0' && filter.item == '0') {
-			console.log('全選択');
+			data = await conn.execute('SELECT * FROM LendingData ORDER BY id ASC;');
+
 		} else if (filter.class != '0' && filter.item == '0') {
-			console.log('クラスのみ選択');
+			data = await conn.execute(`SELECT * FROM LendingData WHERE class_num=${filter.class} ORDER BY id ASC;`);
+
 		} else if (filter.class == '0' && filter.item != '0') {
-			console.log('アイテムのみ選択');
+			data = await conn.execute(`SELECT * FROM LendingData WHERE item_id=${filter.item} ORDER BY id ASC;`);
+
 		} else {
-			console.log('両方選択');
+			data = await conn.execute(`SELECT * FROM LendingData WHERE class_num=${filter.class} AND item_id=${filter.item} ORDER BY id ASC;`);
+
 		}
 	} else {
-		console.log('選択なし');
+		data = await conn.execute('SELECT * FROM LendingData ORDER BY id ASC;');
 	}
 
-	let data = [
-		{
-			dataNum: 1,
-			itemNum: 1,
-			itemPiece: 2,
-			className: '2',
-			lentTime: '2021-08-01 10:00'
-		},
-		{
-			dataNum: 2,
-			itemNum: 2,
-			itemPiece: 1,
-			className: '3',
-			lentTime: '2021-08-02 10:00'
-		}
-	];
 	data = itemNumToName(data);
+	data = classNumToName(data);
 
 	const message = req.query.message ? req.query.message : null;
 
@@ -112,9 +105,10 @@ app.get('/list', (req, res) => {
 	)
 });
 
+
 app.get('/return-confirm/:id', (req, res) => {
 	const id = req.params.id;
-	// SQL SELECT処理
+	// TODO SQL SELECT処理
 	let data = [
 		{
 			dataNum: 1,
@@ -131,9 +125,9 @@ app.get('/return-confirm/:id', (req, res) => {
 
 
 app.post('/return/:id', (req, res) => {
-	// SQL UPDATE処理
+	// TODO SQL UPDATE処理
 	console.log(req.params);
-	// SQL SELECT処理
+	// TODO SQL SELECT処理
 	let data = [
 		{
 			dataNum: 1,

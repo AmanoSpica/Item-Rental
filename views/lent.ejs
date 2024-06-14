@@ -32,8 +32,8 @@
               <label for="itemNum">貸出物品</label>
               <select name="item">
                 <% items.forEach(function(item) { %>
-                  <option value="<%= item.itemNum %>">
-                    <%= item.itemName %>
+                  <option value="<%= item.id %>">
+                    <%= item.item_name %>
                   </option>
                   <% }); %>
               </select>
