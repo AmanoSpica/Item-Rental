@@ -12,7 +12,7 @@ app.use(express.urlencoded({
 }));
 app.use(express.static('public'));
 
-const conn = connect({url: process.env.SQL_URL});
+const conn = connect({ url: process.env.SQL_URL });
 
 const items = await conn.execute('SELECT * FROM Items;')
 const classList = await conn.execute('SELECT * FROM Classes;')
@@ -59,40 +59,42 @@ app.get('/lent', (req, res) => {
 });
 
 
-app.post('/lent', async (req, res) => {
-	console.log(req.body);
-	const time = new Date();
-	time.setHours(time.getHours() + 9);
-	await conn.execute(
-		`INSERT INTO LendingData (item_id, item_piece, class_num, lent_time) VALUES (${req.body.item}, ${req.body.itemPiece}, ${req.body.class}, '${time.toISOString()}');`
-	)
-	const result = await conn.execute('SELECT LAST_INSERT_ID();');
-	res.redirect(`/list?message=貸出処理が完了しました！貸出番号は ${result[0]['LAST_INSERT_ID()']} です。`);
-});
+app.post('/lent', (req, res, next) => {
+	if (req.body.itemPiece === '') {
+		res.redirect('/lent?message=個数を入力してください。');
+	} else {
+		next();
+	}
+},
+	async (req, res) => {
+		console.log(req.body);
+		const time = new Date();
+		time.setHours(time.getHours() + 9);
+
+		await conn.execute(
+			`INSERT INTO LendingData (item_id, item_piece, class_num, lent_time) VALUES (${req.body.item}, ${req.body.itemPiece}, ${req.body.class}, '${time.toISOString()}');`
+		)
+		const result = await conn.execute('SELECT LAST_INSERT_ID();');
+		res.redirect(`/list?message=貸出処理が完了しました！貸出番号は ${result[0]['LAST_INSERT_ID()']} です。`);
+	});
 
 
 app.get('/list', async (req, res) => {
 	const filter = req.query ? req.query : null;
-	console.log(filter);
 	let data = null;
 
 	if (filter != null) {
 		if (filter.class != '0' | filter.item != '0') {
 			if (filter.class == '0' && filter.item != '0') {
-				console.log('item指定');
 				data = await conn.execute(`SELECT * FROM LendingData WHERE item_id=${filter.item} AND return_time IS NULL ORDER BY id ASC;`);
 			} else if (filter.class != '0' && filter.item == '0') {
-				console.log('class指定');
 				data = await conn.execute(`SELECT * FROM LendingData WHERE class_num=${filter.class} AND return_time IS NULL ORDER BY id ASC;`);
 			} else if (filter.class == '0' && filter.item == '0') {
-				console.log('両方指定');
 				data = await conn.execute(`SELECT * FROM LendingData WHERE item_id=${filter.item} AND class_num=${filter.class} AND return_time IS NULL ORDER BY id ASC;`);
 			} else {
-				console.log('全件取得');
 				data = await conn.execute(`SELECT * FROM LendingData WHERE return_time IS NULL ORDER BY id ASC;`);
 			}
 		} else {
-			console.log('全件取得');
 			data = await conn.execute(`SELECT * FROM LendingData WHERE return_time IS NULL ORDER BY id ASC;`);
 
 		}
@@ -116,19 +118,30 @@ app.get('/list', async (req, res) => {
 });
 
 
+app.get('/return-confirm', (req, res, next) => {
+	if (req.query.id === undefined) {
+		res.redirect('/list');
+	} else {
+		next();
+	}
+},
+	(req, res) => {
+		const id = req.query.id;
+		res.redirect(`/return-confirm/${id}`);
+	});
+
 app.get('/return-confirm/:id', async (req, res) => {
 	const id = req.params.id;
 	let data = await conn.execute(`SELECT * FROM LendingData WHERE id=${id};`);
 	data = itemNumToName(data);
 	data = classNumToName(data);
-	console.log(data[0]);
 
 	res.render('return_confirm.ejs', { data: data[0] });
 })
 
 
 app.post('/return/:id', async (req, res) => {
-   	const time = new Date();
+	const time = new Date();
 	time.setHours(time.getHours() + 9);
 	await conn.execute(
 		`UPDATE LendingData SET return_time='${time.toISOString()}' WHERE id=${req.params.id};`

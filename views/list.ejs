@@ -20,6 +20,13 @@
       <div class="botton-container">
         <a href="/lent">新規貸出</a>
       </div>
+      <div class="return-container">
+        <h3>IDから返却</h3>
+        <form action="/return-confirm" method="get">
+          <input type="number" name="id" placeholder="貸出番号">
+          <input type="submit" value="返却">
+        </form>
+      </div>
       <div class="filter-container">
         <h3>絞り込み</h3>
         <form action="/list" method="get">
