@@ -13,16 +13,16 @@
       <h2>返却確認</h2>
       <h3>以下の物品を返却処理します。よろしいですか？</h3>
       <div class="return-item">
-        <div class="list-item-id">ID: <%= data.dataNum %>
+        <div class="list-item-id">ID: <%= data.id %>
         </div>
-        <div class="list-item-name">物品名: <%= data.itemName %>
+        <div class="list-item-name">物品名: <%= data.item_name %>
         </div>
-        <div class="list-item-piece">個数: <%= data.itemPiece %>個</div>
-        <div class="list-item-class">クラス: <%= data.className %>組</div>
-        <div class="list-item-date">貸出日時: <%= data.lentTime %>
+        <div class="list-item-piece">個数: <%= data.item_piece %>個</div>
+        <div class="list-item-class">クラス: <%= data.class_name %></div>
+        <div class="list-item-date">貸出日時: <%= data.lent_time %>
         </div>
         <div class="list-item-button">
-          <form action="/return/<%= data.dataNum %>" method="post">
+          <form action="/return/<%= data.id %>" method="post">
             <input type="submit" value="返却">
           </form>
           <form action="/list" method="get">

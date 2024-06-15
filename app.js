@@ -59,11 +59,15 @@ app.get('/lent', (req, res) => {
 });
 
 
-app.post('/lent', (req, res) => {
-	// TODO SQL INSERT処理
+app.post('/lent', async (req, res) => {
 	console.log(req.body);
-	const id = 4;
-	res.redirect(`/list?message=貸出処理が完了しました！貸出番号は ${id} です。`);
+	const time = new Date();
+	time.setHours(time.getHours() + 9);
+	await conn.execute(
+		`INSERT INTO LendingData (item_id, item_piece, class_num, lent_time) VALUES (${req.body.item}, ${req.body.itemPiece}, ${req.body.class}, '${time.toISOString()}');`
+	)
+	const result = await conn.execute('SELECT LAST_INSERT_ID();');
+	res.redirect(`/list?message=貸出処理が完了しました！貸出番号は ${result[0]['LAST_INSERT_ID()']} です。`);
 });
 
 
@@ -73,21 +77,27 @@ app.get('/list', async (req, res) => {
 	let data = null;
 
 	if (filter != null) {
-		if (filter.class == '0' && filter.item == '0') {
-			data = await conn.execute('SELECT * FROM LendingData ORDER BY id ASC;');
-
-		} else if (filter.class != '0' && filter.item == '0') {
-			data = await conn.execute(`SELECT * FROM LendingData WHERE class_num=${filter.class} ORDER BY id ASC;`);
-
-		} else if (filter.class == '0' && filter.item != '0') {
-			data = await conn.execute(`SELECT * FROM LendingData WHERE item_id=${filter.item} ORDER BY id ASC;`);
-
+		if (filter.class != '0' | filter.item != '0') {
+			if (filter.class == '0' && filter.item != '0') {
+				console.log('item指定');
+				data = await conn.execute(`SELECT * FROM LendingData WHERE item_id=${filter.item} AND return_time IS NULL ORDER BY id ASC;`);
+			} else if (filter.class != '0' && filter.item == '0') {
+				console.log('class指定');
+				data = await conn.execute(`SELECT * FROM LendingData WHERE class_num=${filter.class} AND return_time IS NULL ORDER BY id ASC;`);
+			} else if (filter.class == '0' && filter.item == '0') {
+				console.log('両方指定');
+				data = await conn.execute(`SELECT * FROM LendingData WHERE item_id=${filter.item} AND class_num=${filter.class} AND return_time IS NULL ORDER BY id ASC;`);
+			} else {
+				console.log('全件取得');
+				data = await conn.execute(`SELECT * FROM LendingData WHERE return_time IS NULL ORDER BY id ASC;`);
+			}
 		} else {
-			data = await conn.execute(`SELECT * FROM LendingData WHERE class_num=${filter.class} AND item_id=${filter.item} ORDER BY id ASC;`);
+			console.log('全件取得');
+			data = await conn.execute(`SELECT * FROM LendingData WHERE return_time IS NULL ORDER BY id ASC;`);
 
 		}
 	} else {
-		data = await conn.execute('SELECT * FROM LendingData ORDER BY id ASC;');
+		data = await conn.execute('SELECT * FROM LendingData WHERE return_time IS NULL ORDER BY id ASC;');
 	}
 
 	data = itemNumToName(data);
@@ -106,38 +116,23 @@ app.get('/list', async (req, res) => {
 });
 
 
-app.get('/return-confirm/:id', (req, res) => {
+app.get('/return-confirm/:id', async (req, res) => {
 	const id = req.params.id;
-	// TODO SQL SELECT処理
-	let data = [
-		{
-			dataNum: 1,
-			itemNum: 1,
-			itemPiece: 2,
-			className: '2',
-			lentTime: '2021-08-01 10:00'
-		}
-	];
+	let data = await conn.execute(`SELECT * FROM LendingData WHERE id=${id};`);
 	data = itemNumToName(data);
+	data = classNumToName(data);
+	console.log(data[0]);
 
 	res.render('return_confirm.ejs', { data: data[0] });
 })
 
 
-app.post('/return/:id', (req, res) => {
-	// TODO SQL UPDATE処理
-	console.log(req.params);
-	// TODO SQL SELECT処理
-	let data = [
-		{
-			dataNum: 1,
-			itemNum: 1,
-			itemPiece: 2,
-			className: '2',
-			lentTime: '2021-08-01 10:00'
-		}
-	];
-	data = itemNumToName(data);
+app.post('/return/:id', async (req, res) => {
+   	const time = new Date();
+	time.setHours(time.getHours() + 9);
+	await conn.execute(
+		`UPDATE LendingData SET return_time='${time.toISOString()}' WHERE id=${req.params.id};`
+	);
 
 	res.redirect(`/list?message=貸出番号 ${req.params.id} を返却しました。`);
 });
