@@ -16,10 +16,10 @@
 <body>
   <%- include('header') %>
     <main>
-      <h2>貸出物品一覧 (現在貸し出し中)</h2>
-      <div class="botton-container">
-        <a href="/lent">新規貸出</a>
+      <div class="button-container">
+        <a href="/lent" class="btn-blue">新規貸出</a>
       </div>
+      <h2>貸出物品一覧 (現在貸し出し中)</h2>
       <div class="return-container">
         <h3>IDから返却</h3>
         <form action="/return-confirm" method="get">

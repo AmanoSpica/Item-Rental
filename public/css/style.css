@@ -1,0 +1,66 @@
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 30px;
+}
+
+header {
+  text-align: center;
+}
+header h1 {
+  font-size: 3rem;
+  padding: 20px 0 0;
+  margin: 0;
+}
+header h3 {
+  font-size: 1.3em;
+  margin: 0;
+  position: relative;
+  top: -10px;
+}
+
+/* index */
+
+
+/* 貸出物品一覧 */
+
+
+/* 新規貸出ボタン */
+
+.btn-blue,
+a.btn-blue {
+  font-size: 1rem;
+  line-height: 1.5;
+  position: relative;
+  padding: 0.5rem 2rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #212529;
+  border-radius: 0.5rem;
+  float: right;
+}
+.btn-blue,
+a.btn-blue {
+  color: #fff;
+  background-color: #1e90ff;
+}
+
+.btn:hover
+a.btn:hover {
+  background-color: #1e90ff;
+}
