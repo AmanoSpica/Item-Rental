@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
   <meta charset="utf-8">
   <title>返却</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/css/style.css">
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <% if (message) { %>
-    <script>
-      alert("<%= message %>");
-      location.href = '/list';
-    </script>
+  <script>
+    alert("<%= message %>");
+    location.href = '/list';
+  </script>
   <% } %>
 </head>
 
@@ -22,10 +20,10 @@
     <h3>2025年度版</h3>
   </header>
   <main class="container mt-3">
-    <div class="button-container mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>貸出物品一覧 (現在貸し出し中)</h2>
+      <a href="/lent" class="btn btn-primary">新規貸出</a>
     </div>
-    <h2>貸出物品一覧 (現在貸し出し中)</h2>
-    <a href="/lent" class="btn btn-primary">新規貸出</a>
     <div class="return-container mb-4">
       <h3>IDから返却</h3>
       <form action="/return-confirm" method="get">
@@ -41,18 +39,18 @@
         <div class="input-group mb-3">
           <select name="item" class="form-select">
             <option value="0">物品</option>
-            <% items.forEach((item)=> { %>
-              <option value="<%= item.id %>">
-                <%= item.item_name %>
-              </option>
+            <% items.forEach((item) => { %>
+            <option value="<%= item.id %>">
+              <%= item.item_name %>
+            </option>
             <% }); %>
           </select>
           <select name="class" class="form-select">
             <option value="0">クラス</option>
-            <% classList.forEach((classNum)=> { %>
-              <option value="<%= classNum.id %>">
-                <%= classNum.name %>
-              </option>
+            <% classList.forEach((classNum) => { %>
+            <option value="<%= classNum.id %>">
+              <%= classNum.name %>
+            </option>
             <% }); %>
           </select>
           <button type="submit" class="btn btn-primary">絞り込み</button>
@@ -60,24 +58,23 @@
       </form>
     </div>
     <div class="list-container">
-      <% data.forEach((lent)=> { %>
-        <div class="list-item mb-3 border p-3">
-          <div class="list-item-id">貸出番号: <%= lent.id %></div>
-          <div class="list-item-name">物品名: <%= lent.item_name %></div>
-          <div class="list-item-piece">個数: <%= lent.item_piece %>個</div>
-          <div class="list-item-class">クラス: <%= lent.class_name %></div>
-          <div class="list-item-date">貸出日時: <%= lent.lent_time %></div>
-          <div class="list-item-button mt-2">
-            <form action="/return-confirm/<%= lent.id %>" method="get">
-              <button type="submit" class="btn btn-danger">返却</button>
-            </form>
-          </div>
+      <% data.forEach((lent) => { %>
+      <div class="list-item mb-3 border p-3">
+        <div class="list-item-id">貸出番号: <%= lent.id %></div>
+        <div class="list-item-name">物品名: <%= lent.item_name %></div>
+        <div class="list-item-piece">個数: <%= lent.item_piece %>個</div>
+        <div class="list-item-class">クラス: <%= lent.class_name %></div>
+        <div class="list-item-date">貸出日時: <%= lent.lent_time %></div>
+        <div class="list-item-button mt-2">
+          <form action="/return-confirm/<%= lent.id %>" method="get">
+            <button type="submit" class="btn btn-danger">返却</button>
+          </form>
         </div>
+      </div>
       <% }) %>
     </div>
   </main>
 
-  <!-- Bootstrap JavaScript (必要に応じて) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 

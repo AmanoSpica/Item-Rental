@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
   <meta charset="utf-8">
   <title>返却</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -12,28 +12,28 @@
     <h1>物品貸出登録</h1>
     <h3>2025年度版</h3>
   </header>
-    <main>
-      <h2>返却確認</h2>
-      <h3>以下の物品を返却処理します。よろしいですか？</h3>
-      <div class="return-item">
-        <div class="list-item-id">ID: <%= data.id %>
-        </div>
-        <div class="list-item-name">物品名: <%= data.item_name %>
-        </div>
-        <div class="list-item-piece">個数: <%= data.item_piece %>個</div>
-        <div class="list-item-class">クラス: <%= data.class_name %></div>
-        <div class="list-item-date">貸出日時: <%= data.lent_time %>
-        </div>
-        <div class="list-item-button">
-          <form action="/return/<%= data.id %>" method="post">
-            <input type="submit" value="返却">
-          </form>
-          <form action="/list" method="get">
-            <input type="submit" value="キャンセル">
-          </form>
-        </div>
+  <main class="container">
+    <h2>返却確認</h2>
+    <h3>以下の物品を返却処理します。よろしいですか？</h3>
+    <div class="return-item border p-3 mb-3">
+      <div class="list-item-id mb-2">ID: <%= data.id %></div>
+      <div class="list-item-name mb-2">物品名: <%= data.item_name %></div>
+      <div class="list-item-piece mb-2">個数: <%= data.item_piece %>個</div>
+      <div class="list-item-class mb-2">クラス: <%= data.class_name %></div>
+      <div class="list-item-date mb-2">貸出日時: <%= data.lent_time %></div>
+      <div class="list-item-button d-flex justify-content-between">
+        <form action="/return/<%= data.id %>" method="post" class="mr-2">
+          <button type="submit" class="btn btn-primary">返却</button>
+        </form>
+        <form action="/list" method="get">
+          <button type="submit" class="btn btn-secondary">キャンセル</button>
+        </form>
       </div>
-    </main>
+    </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

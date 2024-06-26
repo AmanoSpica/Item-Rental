@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
   <meta charset="utf-8">
   <title>新規貸出</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <% if (message) { %>
-    <script>
-      alert("<%= message %>");
-      location.href = '/lent';
-    </script>
-    <% } %>
+  <script>
+    alert("<%= message %>");
+    location.href = '/lent';
+  </script>
+  <% } %>
 </head>
 
 <body>
@@ -18,45 +18,47 @@
     <h1>物品貸出登録</h1>
     <h3>2025年度版</h3>
   </header>
-    <main>
-      <div class="container-header">
-        <h1>新規貸出</h1>
-      </div>
-      <div class="form-wrapper">
-        <form action="/lent" method="post">
-          <div class="form-group">
-            <label for="class">クラス</label>
-            <select name="class">
-              <% const classList=[ {name: "1組" , num: 1}, {name: "2組" , num: 2}, {name: "3組" , num: 3}, {name: "4組" ,
-                num: 4}, {name: "5組" , num: 5}, {name: "6組" , num: 6}]; %>
-                <% classList.forEach(function(classNum) { %>
-                  <option value="<%= classNum.num %>">
-                    <%= classNum.name %>
-                  </option>
-                  <% }); %>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="itemNum">貸出物品</label>
-            <select name="item">
-              <% items.forEach(function(item) { %>
-                <option value="<%= item.id %>">
-                  <%= item.item_name %>
-                </option>
-                <% }); %>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="itemPiece">個数</label>
-            <input type="number" name="itemPiece">
-          </div>
-          <div class="form-group">
-            <input type="submit" value="貸出">
-          </div>
-        </form>
-      </div>
-      <a href="/list">戻る</a>
-    </main>
+  <main class="container">
+    <div class="container-header">
+      <h1>新規貸出</h1>
+    </div>
+    <div class="form-wrapper">
+      <form action="/lent" method="post">
+        <div class="form-group">
+          <label for="class">クラス</label>
+          <select name="class" class="form-control">
+            <% const classList = [{name: "1組", num: 1}, {name: "2組", num: 2}, {name: "3組", num: 3}, {name: "4組", num: 4}, {name: "5組", num: 5}, {name: "6組", num: 6}]; %>
+            <% classList.forEach(function(classNum) { %>
+            <option value="<%= classNum.num %>">
+              <%= classNum.name %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="itemNum">貸出物品</label>
+          <select name="item" class="form-control">
+            <% items.forEach(function(item) { %>
+            <option value="<%= item.id %>">
+              <%= item.item_name %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="itemPiece">個数</label>
+          <input type="number" name="itemPiece" class="form-control">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">貸出</button>
+        </div>
+      </form>
+    </div>
+    <a href="/list" class="btn btn-secondary">戻る</a>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
